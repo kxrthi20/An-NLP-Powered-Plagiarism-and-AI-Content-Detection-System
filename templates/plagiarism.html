@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/" method="POST" enctype="multipart/form-data">
+    <div class="input-group">
+        <div class="input-box">
+            <h3 style="margin-bottom:5px;">Document A (Base)</h3>
+            <p style="color:#aaa; font-size:12px; margin-top:0;">Type text directly or upload a document.</p>
+            <textarea name="text1" placeholder="Paste your first text here...">{{ doc1 }}</textarea>
+            <input type="file" name="file1" accept=".txt,.pdf,.docx">
+        </div>
+        <div class="input-box">
+            <h3 style="margin-bottom:5px;">Document B (Compare)</h3>
+            <p style="color:#aaa; font-size:12px; margin-top:0;">Type text directly or upload a document.</p>
+            <textarea name="text2" placeholder="Paste your target text here...">{{ doc2 }}</textarea>
+            <input type="file" name="file2" accept=".txt,.pdf,.docx">
+        </div>
+    </div>
+
+    <button type="submit" name="action" value="plagiarism">🔍 Check Plagiarism</button>
+</form>
+
+{% if plag_results %}
+<div class="result-box {{ plag_results.color|lower }}">
+    <h2>Plagiarism Analysis Result</h2>
+    <p style="font-size: 24px; font-weight: bold;">Similarity Score: {{ plag_results.score }}%</p>
+    <p><strong>Plagiarism Level:</strong> {{ plag_results.level }}</p>
+    
+    <div class="bar-bg">
+        <div class="bar-fill {{ plag_results.color|lower }}" style="width: {{ plag_results.score }}%; border: none;"></div>
+    </div>
+
+    <div class="stats">
+        Words in Doc A: {{ stats.word_count_A }} | Words in Doc B: {{ stats.word_count_B }}<br>
+        <strong>Top Matching Words:</strong> {{ stats.common_words | join(', ') }}
+    </div>
+
+    <form action="/download_report" method="POST" style="margin-top:20px;">
+        <input type="hidden" name="score" value="{{ plag_results.score }}">
+        <input type="hidden" name="level" value="{{ plag_results.level }}">
+        <button type="submit" style="background:#0f3460; border:1px solid #fff;">📥 Download Report</button>
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}

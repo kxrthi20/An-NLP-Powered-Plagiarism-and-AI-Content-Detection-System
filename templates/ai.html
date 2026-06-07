@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/ai" method="POST" enctype="multipart/form-data">
+    <div style="text-align: left; margin-bottom:20px;">
+        <h3 style="margin-bottom:5px;">Target Document</h3>
+        <p style="color:#aaa; font-size:12px; margin-top:0;">Analyze a single document for sentence complexity, burstiness, and predictive AI patterns.</p>
+        <textarea name="text1" placeholder="Paste the text you want to analyze for AI models...">{{ doc1 }}</textarea>
+        <br>
+        <input type="file" name="file1" accept=".txt,.pdf,.docx">
+    </div>
+
+    <button type="submit" name="action" value="ai_a">🤖 Detect AI Content</button>
+</form>
+
+{% if ai_results %}
+<div class="result-box">
+    <h2>AI Content Detection Results</h2>
+    <div class="input-group" style="text-align:center; justify-content: space-around;">
+        <div>
+            <h3 style="color:#e94560;">AI Probability</h3>
+            <p style="font-size:30px;">{{ ai_results.ai_probability }}%</p>
+        </div>
+        <div>
+            <h3 style="color:#28a745;">Human Probability</h3>
+            <p style="font-size:30px;">{{ ai_results.human_probability }}%</p>
+        </div>
+    </div>
+    
+    <p><strong>Heuristical Content Type:</strong> {{ ai_results.label }}</p>
+    <div class="bar-bg">
+        <div class="bar-fill" style="width: {{ ai_results.ai_probability }}%; background: #e94560; border: none;"></div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
